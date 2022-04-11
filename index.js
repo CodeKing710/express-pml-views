@@ -1,31 +1,21 @@
 const fs = require('fs');
+const lex = require('./lexer');
+
 function createEngine(filePath, options, callback) {
-  filePath = './views' || filePath; //Default path
+  //Set paths
+  filePath = filePath || './views'; //Default path
+  exports.templates = [];
+  
+  //read file
   fs.readFile(filePath, (err, content) => {
-    if(err) return callback(err);
+    if(err) {return callback(err)}
 
-    //Begin parsing
-    content = content.toString()
+    const tokenized = lex(content);
+    const rendered = render(tokenized);
     
-    const keyList = {
-      tag: /\$(\w|\W)+/g,
-      attr: />(\w|\W)+/g,
-      expr: /(\w|\W)+=(\w|\W)+/g,
-      ref: /"(\w|\W)+"/g
-    };
-    const replacements = {
-      tag: null,
-      attr: null,
-      expr: null,
-      ref: null
-    }
-
-    const rendered = () => {
-      for (const key in keyList) {
-        content = content.replace(key, replacements[key])
-      }
-    }
+    return callback(null, rendered);
   });
+
 }
 
-module.exports = createEngine
+module.exports = createEngine;
