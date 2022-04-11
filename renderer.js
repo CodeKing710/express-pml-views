@@ -1,6 +1,7 @@
-function render(tokens) {
+function render(tokens, options) {
   const peek = (i) => {return tokens[i+1]};
-  const rendered = '';
+  const rendered = '<!DOCTYPE html>';
+  if(!tokens || tokens === []) {return rendered;}
 
   for(let i = 0; i < tokens.length; i++) {
     const token = tokens[i];
@@ -18,7 +19,7 @@ function render(tokens) {
     switch(value) {
       case 'template':
         if(peek(i).type == 'value') {
-          global.templates.push(peek(i).value);
+          global.cache.templates.push(peek(i).value);
         }
         break;
       case 'include':

@@ -10,8 +10,11 @@ function lex(src) {
   }
   const tokens = [];
   
-  for(let i = 0; i < src.length; i++) {
+  for(let i = 0; i <= src.length; i++) {
     const char = src[i];
+    if(i == src.length && char == '\n') {
+      return tokens;
+    }
 
     switch(char) {
       case '#':
@@ -23,7 +26,7 @@ function lex(src) {
       
       //Handle unknown characters
       default:
-        continue;
+        break;
     }
   }
 

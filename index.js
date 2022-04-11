@@ -1,7 +1,8 @@
 const fs = require('fs');
 const lex = require('./lexer');
 const render = require('./renderer');
-global.templates = [];
+global.cache = {};
+global.cache.templates = [];
 
 function createEngine(filePath, options, callback) {
   //Set paths
@@ -13,7 +14,7 @@ function createEngine(filePath, options, callback) {
     content = content.toString();
 
     const tokenized = lex(content);
-    const rendered = render(tokenized);
+    const rendered = render(tokenized, options);
     
     return callback(null, rendered);
   });
