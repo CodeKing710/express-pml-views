@@ -21,3 +21,40 @@ test('See if lexer handles includes properly (@ include name => [{...},{...}])',
     {type: 'value', value: 'null'}
   ]);
 });
+
+test('See if lexer handles variables properly ($name => [{...}])', () => {
+  //Variable test
+  expect(lex('$title\n')).toEqual([
+    {type: 'variable', value: 'title'}
+  ]);
+});
+
+test('See if lexer handles tags properly (:name => [{...}])', () => {
+  //Tag test
+  expect(lex(':head\n')).toEqual([
+    {type: 'tag', value: 'head'}
+  ]);
+});
+
+test('See if lexer handles attributes properly (<name=value,[...]> => [{...},{...},[...]])', () => {
+  //Attribute test
+  expect(lex('<class=hello>\n')).toEqual([
+    {type: 'attrName', value: 'class'},
+    {type: 'attrValue', value: 'hello'}
+  ]);
+  expect(lex('<class=hello,id=foo>\n')).toEqual([
+    {type: 'attrName', value: 'class'},
+    {type: 'attrValue', value: 'hello'},
+    {type: 'attrName', value: 'id'},
+    {type: 'attrValue', value: 'foo'}
+  ]);
+});
+
+test('See if lexer handles text', () => {
+  expect(lex('"This is a sentence\n')).toEqual([
+    {type: 'text', value: 'This is a sentence'}
+  ]);
+  // expect(lex('"This is a sentence that has $variable in it\n')).toEqual([
+  //   {type: 'text', value: 'This is a sentence'}
+  // ]);
+});
