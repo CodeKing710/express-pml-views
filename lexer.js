@@ -31,9 +31,12 @@ function lex(src) {
       case '<':
         i = handleAttributes(i);
         break;
-      //Handle unknown characters
       case '"':
         i = handleText(i);
+        break;
+      case '!':
+        i = handleEOF(i);
+      default:
         break;
     }
   }
@@ -41,6 +44,11 @@ function lex(src) {
   return tokens;
 
   //Inner funcs
+  //EOF
+  function handleEOF(index) {
+    return peek(index) == '!' ? ++index : index;
+  }
+
   //Comments
   function handleComment(index) {
     while(peek(index) != '\n')
@@ -75,14 +83,16 @@ function lex(src) {
   }
 
   //Variables
-  function handleVariable(index) {
+  function handleVariable(index, interp=false) {
     let variable = '';
-    while(peek(index) != '\n') {
+    let delim = interp ? '$':'\n';
+
+    while(peek(index) != delim) {
       variable += src[++index];
     }
     tokens.push(tokenizer('variable',variable));
 
-    return index;
+    return interp ? ++index : index;
   }
 
   //Tags
@@ -135,7 +145,9 @@ function lex(src) {
     let sentence = '';
     while(peek(index) != '\n') {
       if(peek(index) == '$') {
-        index = handleVariable(index);
+        tokens.push(tokenizer('text',sentence));
+        sentence = '';
+        index = handleVariable(++index,true);
       }
       sentence += src[++index];
     }

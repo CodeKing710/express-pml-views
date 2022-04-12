@@ -50,11 +50,28 @@ test('See if lexer handles attributes properly (<name=value,[...]> => [{...},{..
   ]);
 });
 
+test('See if lexer handles tags with attributes properly', () => {
+  expect(lex(':head <id=head>\n')).toEqual([
+    {type: 'tag', value: 'head'},
+    {type: 'attrName', value: 'id'},
+    {type: 'attrValue', value: 'head'}
+  ]);
+  expect(lex(':head <id=head,class=main>\n')).toEqual([
+    {type: 'tag', value: 'head'},
+    {type: 'attrName', value: 'id'},
+    {type: 'attrValue', value: 'head'},
+    {type: 'attrName', value: 'class'},
+    {type: 'attrValue', value: 'main'}
+  ]);
+});
+
 test('See if lexer handles text', () => {
   expect(lex('"This is a sentence\n')).toEqual([
     {type: 'text', value: 'This is a sentence'}
   ]);
-  // expect(lex('"This is a sentence that has $variable in it\n')).toEqual([
-  //   {type: 'text', value: 'This is a sentence'}
-  // ]);
+  expect(lex('"This is a sentence that has $variable$ in it\n')).toEqual([
+    {type: 'text', value: 'This is a sentence that has '},
+    {type: 'variable', value: 'variable'},
+    {type: 'text', value: ' in it'}
+  ]);
 });
