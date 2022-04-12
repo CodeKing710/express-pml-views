@@ -3,8 +3,8 @@ global.cache = {};
 global.cache.templates = [];
 
 test('See if render returns <!DOCTYPE html>', () => {
-  expect(render()).toBe('<!DOCTYPE html>');
-  expect(render([])).toBe('<!DOCTYPE html>');
+  expect(render()).toBe('<!DOCTYPE html>\n<html></html>');
+  expect(render([])).toBe('<!DOCTYPE html>\n<html></html>');
 });
 
 test('See if render logs template directives', () => {

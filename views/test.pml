@@ -24,7 +24,6 @@
         :a <href=javascript:void(0),class=nav-item>
           "Link
   :main
-    :section <class=container,id=hero>
-    :section <class=container,id=desc>
+    $children
   :footer
 !!
